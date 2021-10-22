@@ -14,10 +14,10 @@ def get_data(files):
 
     for file_name in files:
         with open(file_name, 'r') as file:
-            content = file.read()
+            CONTENT = file.read()
         item_data = [] 
         for item in main_data:
-            item_data.append(re.search(item + r': +(.+)\n', content)[1])
+            item_data.append(re.search(item + r': +(.+)\n', CONTENT)[1])
         result.append(item_data)
 
     return result
