@@ -3,7 +3,7 @@
 
 import csv, re
 
-def get_data(files):
+def get_data(numbers):
     main_data = [
         'Изготовитель системы',
         'Название ОС',
@@ -12,7 +12,7 @@ def get_data(files):
     ]
     result = [main_data]
 
-    for file_name in files:
+    for file_name in [f'info_{number}.txt' for number in numbers]:
         with open(file_name, 'r') as file:
             CONTENT = file.read()
         item_data = [] 
@@ -23,7 +23,7 @@ def get_data(files):
     return result
 
 def wrire_to_csv(file):
-    data = get_data(['info_1.txt', 'info_2.txt', 'info_3.txt'])
+    data = get_data([1, 2, 3])
 
     with open(file, 'w', newline='') as result_file:
         RES_FILE_WRITER = csv.writer(result_file)

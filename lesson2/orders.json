@@ -6,6 +6,13 @@
             "price": 500,
             "buyer": "someone",
             "date": "22-10-2021"
+        },
+        {
+            "item": "Item",
+            "quantity": 2,
+            "price": 500,
+            "buyer": "someone",
+            "date": "22-10-2021"
         }
     ]
 }

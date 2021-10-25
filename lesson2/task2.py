@@ -6,13 +6,13 @@ import json
 def write_order_to_json(item, quantity, price, buyer, date):
     with open('orders.json', 'r+') as json_file:
         obj = json.load(json_file)
-        obj['orders'] = [{
+        obj['orders'].append({
             'item': item,
             'quantity': quantity,
             'price': price,
             'buyer': buyer,
             'date': date
-        }]
+        })
         json_file.seek(0)
         json.dump(obj, json_file, indent=4)
 
