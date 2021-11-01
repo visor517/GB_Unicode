@@ -1,12 +1,13 @@
 """Программа-клиент"""
 
-import sys
 import json
 import socket
+import sys
 import time
+
+from common.utils import get_message, send_message
 from common.variables import ACTION, PRESENCE, TIME, PORT, USER, ACCOUNT_NAME, \
     RESPONSE, ERROR, DEFAULT_IP_ADDRESS, DEFAULT_PORT
-from common.utils import get_message, send_message
 
 
 def create_message(server_port, account_name='Guest'):
