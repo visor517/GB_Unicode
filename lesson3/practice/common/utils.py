@@ -1,6 +1,7 @@
 """Утилиты"""
 
 import json
+
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING
 
 
