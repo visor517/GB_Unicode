@@ -1,11 +1,16 @@
 """Программа-сервер"""
 
+import logging
+import log.server_log_config
 import socket
 import sys
 import json
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_CONNECTIONS, \
     PRESENCE, TIME, USER, ERROR, DEFAULT_PORT
 from common.utils import get_message, send_message
+
+
+LOGGER = logging.getLogger('server')
 
 
 def check_client_message(message):
@@ -27,6 +32,8 @@ def check_client_message(message):
 
 
 def main():
+    LOGGER.info("Включение сервера")
+
     """
     Загрузка параметров командной строки, если нет параметров, то задаём значения по умоланию.
     Сначала обрабатываем порт:
@@ -42,10 +49,11 @@ def main():
         if listen_port < 1024 or listen_port > 65535:
             raise ValueError
     except IndexError:
-        print('После параметра -\'p\' необходимо указать номер порта.')
+        LOGGER.critical(
+            'После параметра -\'p\' необходимо указать номер порта.')
         sys.exit(1)
     except ValueError:
-        print(
+        LOGGER.critical(
             'В качастве порта может быть указано только число в диапазоне от 1024 до 65535.')
         sys.exit(1)
 
@@ -58,7 +66,7 @@ def main():
             listen_address = ''
 
     except IndexError:
-        print(
+        LOGGER.error(
             'После параметра \'a\'- необходимо указать адрес, который будет слушать сервер.')
         sys.exit(1)
 
@@ -71,16 +79,18 @@ def main():
 
     transport.listen(MAX_CONNECTIONS)
 
+    LOGGER.info(f'Сервер включен. Порт для подключений: {listen_port}')
+
     while True:
         client, client_address = transport.accept()
         try:
             message_from_client = get_message(client)
-            print(message_from_client)
+            LOGGER.info(f'Установлено соедение с ПК {client_address}')
             response = check_client_message(message_from_client)
             send_message(client, response)
             client.close()
         except (ValueError, json.JSONDecodeError):
-            print('Принято некорретное сообщение от клиента.')
+            LOGGER.warning('Принято некорретное сообщение от клиента.')
             client.close()
 
 

@@ -4,10 +4,14 @@ import json
 import socket
 import sys
 import time
+import logging
+import log.client_log_config
 
 from common.utils import get_message, send_message
 from common.variables import ACTION, PRESENCE, TIME, PORT, USER, ACCOUNT_NAME, \
     RESPONSE, ERROR, DEFAULT_IP_ADDRESS, DEFAULT_PORT
+
+LOGGER = logging.getLogger('client')
 
 
 def create_message(server_port, account_name='Guest'):
@@ -51,8 +55,11 @@ def main():
         server_ip = DEFAULT_IP_ADDRESS
         server_port = DEFAULT_PORT
     except ValueError:
-        print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        LOGGER.critical(
+            'В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         sys.exit(1)
+
+    LOGGER.info(f'Клиент формирует запрос к серверу: {server_ip} {server_port}')
 
     # Инициализация сокета и обмен
 
@@ -62,9 +69,10 @@ def main():
     send_message(transport, message_to_server)
     try:
         answer = check_ans(get_message(transport))
+        LOGGER.info(f'Принят ответ от сервера: {answer}')
         print(answer)
     except (ValueError, json.JSONDecodeError):
-        print('Не удалось декодировать сообщение сервера.')
+        LOGGER.error('Не удалось декодировать сообщение сервера.')
 
 
 if __name__ == '__main__':
