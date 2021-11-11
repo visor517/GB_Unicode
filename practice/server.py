@@ -1,10 +1,12 @@
 """Программа-сервер"""
 
-import logging
-import log.server_log_config
+import json
 import socket
 import sys
-import json
+import logging
+import log.server_log_config
+from decos import log
+
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_CONNECTIONS, \
     PRESENCE, TIME, USER, ERROR, DEFAULT_PORT
 from common.utils import get_message, send_message
@@ -13,6 +15,7 @@ from common.utils import get_message, send_message
 LOGGER = logging.getLogger('server')
 
 
+@log
 def check_client_message(message):
     """
     Обработчик сообщений от клиентов, принимает словарь -
