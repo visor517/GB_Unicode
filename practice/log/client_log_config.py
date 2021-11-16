@@ -1,4 +1,5 @@
 import logging
+import logging.handlers
 import os
 
 
@@ -10,7 +11,8 @@ formatter = logging.Formatter(
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH = os.path.join(PATH, 'client.log')
 
-fh = logging.FileHandler(PATH, encoding='utf8')
+fh = logging.handlers.TimedRotatingFileHandler(
+    PATH, encoding='utf8', interval=1)
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 

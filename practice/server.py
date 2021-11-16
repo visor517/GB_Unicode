@@ -10,7 +10,7 @@ import select
 from decos import log
 
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_CONNECTIONS, \
-    PRESENCE, TIME, USER, ERROR, DEFAULT_PORT, SENDER, MESSAGE, MESSAGE_TEXT
+    PRESENCE, TIME, USER, ERROR, DEFAULT_PORT, SENDER, MESSAGE, MESSAGE_TEXT, RECIVER
 from common.utils import get_message, send_message
 
 
@@ -21,11 +21,12 @@ LOGGER = logging.getLogger('server')
 def check_client_message(message, messages_list, client):
     """Обработчик сообщений от клиентов"""
     if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
-            and USER in message and message[USER][ACCOUNT_NAME] == 'Guest':
+            and USER in message:
         send_message(client, {RESPONSE: 200})
     elif ACTION in message and message[ACTION] == MESSAGE and \
-            TIME in message and MESSAGE_TEXT in message:
-        messages_list.append((message[ACCOUNT_NAME], message[MESSAGE_TEXT]))  
+            TIME in message and MESSAGE_TEXT in message and \
+            RECIVER in message:
+        messages_list.append((message[ACCOUNT_NAME], message[RECIVER], message[MESSAGE_TEXT]))  
     else:
         send_message(client, {
             RESPONSE: 400,
@@ -121,11 +122,13 @@ def main():
 
         # Если есть сообщения для отправки и ожидающие клиенты, отправляем им сообщение.
         if messages and send_data_list:
+            print(messages[0])
             message = {
                 ACTION: MESSAGE,
                 SENDER: messages[0][0],
                 TIME: time.time(),
-                MESSAGE_TEXT: messages[0][1]
+                MESSAGE_TEXT: messages[0][2],
+                RECIVER: messages[0][1] 
             }
             del messages[0]
             for waiting_client in send_data_list:
